@@ -7,7 +7,7 @@
     tools:context=".splash.SplashActivity">
     <fragment
         android:id="@+id/splashPagerFragment"
-        android:name="feicuiedu.com.gitdroid.splash.SplashPagerFragment"
+        android:name="com.feicui.mygitdroid.splash.SplashPagerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/buttonBar"/>
