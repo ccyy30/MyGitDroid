@@ -23,6 +23,11 @@ public class SplashPagerAdapter extends PagerAdapter {
         views[2] = new Pager2(context);
     }
 
+    //返回某一个视图对象
+    public View getView(int position){
+        return views[position];
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         container.addView(views[position],0);

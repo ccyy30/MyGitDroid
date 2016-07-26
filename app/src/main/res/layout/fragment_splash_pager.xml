@@ -19,43 +19,43 @@
         android:layout_gravity="bottom"
         app:ci_drawable="@drawable/circle_indicator"/>
 
-    <!--<FrameLayout-->
-        <!--android:id="@+id/layoutPhone"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <FrameLayout
+        android:id="@+id/layoutPhone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <!--<FrameLayout-->
-            <!--android:id="@+id/layoutPhoneInner"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--tools:ignore="UselessParent">-->
+        <FrameLayout
+            android:id="@+id/layoutPhoneInner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:ignore="UselessParent">
 
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:src="@drawable/phone" />-->
-            <!--<ImageView-->
-                <!--android:id="@+id/ivPhoneBlank"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:src="@drawable/screen_blank_large" />-->
-            <!--<ImageView-->
-                <!--android:id="@+id/ivPhone"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:src="@drawable/screen_large"-->
-                <!--android:alpha="0"/>-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/phone" />
+            <ImageView
+                android:id="@+id/ivPhoneBlank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/screen_blank_large" />
+            <ImageView
+                android:id="@+id/ivPhoneFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/screen_large"
+                android:alpha="0"/>
 
-        <!--</FrameLayout>-->
+        </FrameLayout>
 
-    <!--</FrameLayout>-->
+    </FrameLayout>
 
 </FrameLayout>
