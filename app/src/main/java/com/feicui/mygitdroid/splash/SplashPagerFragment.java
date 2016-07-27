@@ -48,7 +48,7 @@ public class SplashPagerFragment  extends Fragment{
     @BindView(R.id.ivPhoneFont)
     ImageView ivPhoneFont;//手机字体
     //屏幕宽和高
-    private int screenW,screenH;
+    private int screenW;
 
     @Nullable
     @Override
@@ -56,7 +56,6 @@ public class SplashPagerFragment  extends Fragment{
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenW = dm.widthPixels;
-        screenH = dm.heightPixels;
         return inflater.inflate(R.layout.fragment_splash_pager,container,false);
     }
 
@@ -108,7 +107,6 @@ public class SplashPagerFragment  extends Fragment{
 
     //手机动画
     private ViewPager.OnPageChangeListener phoneChange = new ViewPager.OnPageChangeListener() {
-        private ArgbEvaluator evaluator = new ArgbEvaluator();//颜色拾取器
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             switch(position){
