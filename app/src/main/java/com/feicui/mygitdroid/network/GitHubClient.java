@@ -1,6 +1,7 @@
 package com.feicui.mygitdroid.network;
 
-import com.feicui.mygitdroid.login.AccessTokenResult;
+import com.feicui.mygitdroid.login.model.AccessTokenResult;
+import com.feicui.mygitdroid.login.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -8,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
@@ -32,6 +32,8 @@ public class GitHubClient implements GitHubApi{
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
+                //添加拦截器，每次发送请求时都需要在头中添加token
+                .addInterceptor(new TokenInterceptor())
                 .build();
 
         //添加一个转换器，可以自动转换JSON到对象.addConverterFactory(GsonConverterFactory.create(gson))
@@ -61,5 +63,10 @@ public class GitHubClient implements GitHubApi{
     @Override
     public Call<AccessTokenResult> getAccessToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("code") String code) {
         return gitHubApi.getAccessToken(clientId,clientSecret,code);
+    }
+
+    @Override
+    public Call<User> getUserInfo() {
+        return gitHubApi.getUserInfo();
     }
 }
