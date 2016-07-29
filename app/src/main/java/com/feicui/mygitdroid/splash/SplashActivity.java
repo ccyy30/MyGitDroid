@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.feicui.mygitdroid.MainActivity;
 import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
+import com.feicui.mygitdroid.login.LoginActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,7 +31,8 @@ public class SplashActivity extends AppCompatActivity {
     @OnClick(R.id.btnLogin)
     public void login(){
         //github授权登陆
-
+        activityUtils.startActivity(LoginActivity.class);
+        finish();
     }
 
     @OnClick(R.id.btnEnter)
