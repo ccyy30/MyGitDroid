@@ -28,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.webView)
     WebView webView;
 
+    private LoginPresenter loginPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+        loginPresenter = new LoginPresenter();
         initWebView();
 
     }
@@ -65,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                 //获取code
                 String code = uri.getQueryParameter("code");
                 LogUtils.i(code);
+                //授权登陆业务
+                loginPresenter.login(code);
             }
             return super.shouldOverrideUrlLoading(view, url);
         }

@@ -1,18 +1,22 @@
 package com.feicui.mygitdroid.network;
 
+import com.feicui.mygitdroid.login.AccessTokenResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
 
 /**
  * Created by Administrator on 2016/7/28 0028.
  */
-public class GitHubClient {
+public class GitHubClient implements GitHubApi{
 
     private OkHttpClient okHttpClient;
     private static GitHubClient gitHubClient;
@@ -36,6 +40,8 @@ public class GitHubClient {
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+
+        gitHubApi = retrofit.create(GitHubApi.class);
     }
 
     public static GitHubClient getInstance(){
@@ -47,17 +53,13 @@ public class GitHubClient {
 
     private GitHubApi gitHubApi;
 
-    public GitHubApi getGitHubApi(){
-        if(gitHubApi == null){
-            gitHubApi = retrofit.create(GitHubApi.class);
-        }
-        return gitHubApi;
-    }
-
     public OkHttpClient getOkHttpClient(){
         return okHttpClient;
     }
 
 
-
+    @Override
+    public Call<AccessTokenResult> getAccessToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("code") String code) {
+        return gitHubApi.getAccessToken(clientId,clientSecret,code);
+    }
 }

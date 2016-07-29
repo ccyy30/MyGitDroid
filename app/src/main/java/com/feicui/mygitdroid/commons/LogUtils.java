@@ -3,7 +3,7 @@ package com.feicui.mygitdroid.commons;
 @SuppressWarnings("unused")
 public final class LogUtils {
 
-    private static final String TAG = "treasure_hunter";
+    private static final String TAG = "gitdroid";
 
     private static final String TAG_TRACE = "method_trace";
 
