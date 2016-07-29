@@ -46,4 +46,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     //retrofit的GSON转换器
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    //图片处理库
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

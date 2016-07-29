@@ -10,15 +10,18 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.feicui.mygitdroid.MainActivity;
 import com.feicui.mygitdroid.R;
+import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.commons.LogUtils;
+import com.feicui.mygitdroid.login.view.LoginView;
 import com.feicui.mygitdroid.network.GitHubApi;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifImageView;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginView{
 
     //做GIF动画的第三方库
     @BindView(R.id.gifImageView)
@@ -29,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     WebView webView;
 
     private LoginPresenter loginPresenter;
+    private ActivityUtils activityUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onContentChanged() {
         super.onContentChanged();
+        activityUtils = new ActivityUtils(this);
         ButterKnife.bind(this);
-        loginPresenter = new LoginPresenter();
+        loginPresenter = new LoginPresenter(this);
         initWebView();
 
     }
@@ -81,9 +86,30 @@ public class LoginActivity extends AppCompatActivity {
             super.onProgressChanged(view, newProgress);
             if(newProgress >= 100){//加载完毕
                 //显示webview，隐藏动画控件
-                webView.setVisibility(View.VISIBLE);
+//                webView.setVisibility(View.VISIBLE);//一直都是显示的 ，没有必要再写
                 gifImageView.setVisibility(View.GONE);
             }
         }
     };
+
+    @Override
+    public void navigationToHome() {
+        activityUtils.startActivity(MainActivity.class);
+        finish();
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        activityUtils.showToast(msg);
+    }
+
+    @Override
+    public void showProgress() {
+        gifImageView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void resetView() {
+        initWebView();
+    }
 }

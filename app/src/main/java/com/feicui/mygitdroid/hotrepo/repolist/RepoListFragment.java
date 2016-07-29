@@ -69,11 +69,15 @@ public class RepoListFragment extends Fragment implements RepoListView {
                 new ArrayList<String>()
         );
 
-        listView.setAdapter(adapter);
         //初始化下拉刷新
         initPullToRefresh();
         //初始化上拉加载更多
         initLoadMore();
+        //由于模拟器上在移除上拉加载视图时出现异常，解决方案是在setAdapter之前先加入一个footView
+        //在设置适配器后再移除
+        listView.addFooterView(footerView);
+        listView.setAdapter(adapter);
+        listView.removeFooterView(footerView);
     }
     //上拉加载的视图
     private FooterView footerView;
