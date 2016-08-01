@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.feicui.mygitdroid.hotrepo.repolist.modle.Repo;
 import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListPtrView;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListView;
+import com.feicui.mygitdroid.repoinfo.RepoInfoActivity;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
@@ -76,6 +78,13 @@ public class RepoListFragment extends Fragment implements RepoListView {
         //在设置适配器后再移除
         listView.addFooterView(footerView);
         listView.setAdapter(repoListAdapter);
+        //设置条目点击监听，跳转到仓库详情页
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                RepoInfoActivity.open(getContext(), (Repo) repoListAdapter.getItem(i));
+            }
+        });
         listView.removeFooterView(footerView);
     }
     //上拉加载的视图
