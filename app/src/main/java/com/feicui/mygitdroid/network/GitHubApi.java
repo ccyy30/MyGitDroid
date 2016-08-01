@@ -3,13 +3,18 @@ package com.feicui.mygitdroid.network;
 import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.login.model.AccessTokenResult;
 import com.feicui.mygitdroid.login.model.User;
+import com.feicui.mygitdroid.repoinfo.RepoContentResult;
 
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -46,4 +51,26 @@ public interface GitHubApi {
     /** 搜索仓库*/
     @GET("search/repositories")
     Call<RepoResult> searchRepos(@Query("q")String query,@Query("page")int pageId);
+
+    /*  获取readme，进行过Base64加密处理，需要解密**/
+    @GET("/repos/{owner}/{repo}/readme")
+    Call<RepoContentResult> getReadme(
+            @Path("owner")String owner,
+            @Path("repo")String repo
+    );
+
+    /*  根据readme返回的RepoContentResult来获取MarkDown
+    *   它以纯文本的形式text/plain接收Markdown文档，并返回该文档对应的原始文件
+    *   响应
+
+        例如：
+
+        Status: 200 OK
+        Content-Type: text/html
+        X-RateLimit-Limit: 5000
+        X-RateLimit-Remaining: 4999
+<p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>
+    * **/
+    @POST("/markdown/raw")
+    Call<ResponseBody> getMarkDown(@Body RequestBody body);
 }

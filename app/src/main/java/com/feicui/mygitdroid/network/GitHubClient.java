@@ -3,16 +3,21 @@ package com.feicui.mygitdroid.network;
 import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.login.model.AccessTokenResult;
 import com.feicui.mygitdroid.login.model.User;
+import com.feicui.mygitdroid.repoinfo.RepoContentResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -75,5 +80,15 @@ public class GitHubClient implements GitHubApi{
     @Override
     public Call<RepoResult> searchRepos(@Query("q") String query, @Query("page") int pageId) {
         return gitHubApi.searchRepos(query,pageId);
+    }
+
+    @Override
+    public Call<RepoContentResult> getReadme(@Path("owner") String owner, @Path("repo") String repo) {
+        return gitHubApi.getReadme(owner,repo);
+    }
+
+    @Override
+    public Call<ResponseBody> getMarkDown(@Body RequestBody body) {
+        return gitHubApi.getMarkDown(body);
     }
 }

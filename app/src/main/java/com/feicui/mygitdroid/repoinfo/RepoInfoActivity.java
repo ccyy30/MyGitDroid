@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 /*
 * 仓库详情页
 * **/
-public class RepoInfoActivity extends AppCompatActivity {
+public class RepoInfoActivity extends AppCompatActivity implements RepoInfoView{
 
     private ActivityUtils activityUtils;
     @BindView(R.id.toolbar)
@@ -37,6 +38,7 @@ public class RepoInfoActivity extends AppCompatActivity {
     WebView webView; // 用来展示readme的
     @BindView(R.id.progressBar)
     ProgressBar progressBar; // loading
+    private RepoInfoPresenter repoInfoPresenter;
 
     //传递过来的仓库对象
     private Repo repo;
@@ -61,6 +63,7 @@ public class RepoInfoActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+        repoInfoPresenter = new RepoInfoPresenter(this);
         //设置toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,6 +73,8 @@ public class RepoInfoActivity extends AppCompatActivity {
         tvRepoInfo.setText(repo.getDescription());
         tvRepoName.setText(repo.getFullName());
         tvRepoStars.setText(String.format("start: %d  fork: %d", repo.getStarCount(), repo.getForkCount()));
+        //网络请求下半部分readme中的数据，显示在webview上
+        repoInfoPresenter.getReadme(repo);
     }
 
     @Override
@@ -80,5 +85,26 @@ public class RepoInfoActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        activityUtils.showToast(msg);
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showData(String data) {
+        webView.loadData(data,"text/html","utf-8");
     }
 }
