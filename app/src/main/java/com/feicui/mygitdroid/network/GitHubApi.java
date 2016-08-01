@@ -1,5 +1,6 @@
 package com.feicui.mygitdroid.network;
 
+import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.login.model.AccessTokenResult;
 import com.feicui.mygitdroid.login.model.User;
 
@@ -9,6 +10,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by Administrator on 2016/7/28 0028.
@@ -40,4 +42,8 @@ public interface GitHubApi {
     /** 获取用户信息*/
     @GET("user")
     Call<User> getUserInfo();
+
+    /** 搜索仓库*/
+    @GET("search/repositories")
+    Call<RepoResult> searchRepos(@Query("q")String query,@Query("page")int pageId);
 }

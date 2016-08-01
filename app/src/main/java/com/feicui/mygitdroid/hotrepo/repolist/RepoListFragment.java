@@ -15,12 +15,15 @@ import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.commons.LogUtils;
 import com.feicui.mygitdroid.components.FooterView;
 import com.feicui.mygitdroid.hotrepo.Language;
+import com.feicui.mygitdroid.hotrepo.repolist.modle.Repo;
+import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListPtrView;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListView;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +50,8 @@ public class RepoListFragment extends Fragment implements RepoListView {
     TextView tvEmptyView;
 
     private RepoListPresenter repoListPresenter;
-    private ArrayAdapter adapter;
     private ActivityUtils activityUtils;
+    private RepoListAdapter repoListAdapter;
 
     @Nullable
     @Override
@@ -61,14 +64,9 @@ public class RepoListFragment extends Fragment implements RepoListView {
         super.onViewCreated(view, savedInstanceState);
         activityUtils = new ActivityUtils(this);
         ButterKnife.bind(this,view);
-
-        repoListPresenter = new RepoListPresenter(this);
-
-        adapter = new ArrayAdapter(
-                getContext(),
-                android.R.layout.simple_list_item_1,
-                new ArrayList<String>()
-        );
+        repoListAdapter = new RepoListAdapter(getContext());
+        Language language = (Language)getArguments().getSerializable(KEY_LANGUAGE);
+        repoListPresenter = new RepoListPresenter(this,language);
 
         //初始化下拉刷新
         initPullToRefresh();
@@ -77,7 +75,7 @@ public class RepoListFragment extends Fragment implements RepoListView {
         //由于模拟器上在移除上拉加载视图时出现异常，解决方案是在setAdapter之前先加入一个footView
         //在设置适配器后再移除
         listView.addFooterView(footerView);
-        listView.setAdapter(adapter);
+        listView.setAdapter(repoListAdapter);
         listView.removeFooterView(footerView);
     }
     //上拉加载的视图
@@ -140,9 +138,8 @@ public class RepoListFragment extends Fragment implements RepoListView {
     }
 
     @Override
-    public void addRefreshData(ArrayList<String> datas) {
-        adapter.addAll(datas);
-        adapter.notifyDataSetChanged();
+    public void addRefreshData(List<Repo> datas) {
+        repoListAdapter.addAll(datas);
     }
 
     @Override
@@ -206,9 +203,9 @@ public class RepoListFragment extends Fragment implements RepoListView {
     }
 
     @Override
-    public void addLoadMoreData(ArrayList<String> datas) {
-        adapter.addAll(datas);
-        adapter.notifyDataSetChanged();
+    public void addLoadMoreData(ArrayList<Repo> datas) {
+        repoListAdapter.addAll(datas);
+        repoListAdapter.notifyDataSetChanged();
     }
 
     private static final String KEY_LANGUAGE = "key_language";

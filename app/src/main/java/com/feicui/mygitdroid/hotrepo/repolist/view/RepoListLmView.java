@@ -1,5 +1,7 @@
 package com.feicui.mygitdroid.hotrepo.repolist.view;
 
+import com.feicui.mygitdroid.hotrepo.repolist.modle.Repo;
+
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,6 @@ public interface RepoListLmView {
     void showLoadMoreLoading();
     void hideLoadMore();
     void showLoadMoreErro(String erroMsg);
-    void addLoadMoreData(ArrayList<String> datas);
+    void addLoadMoreData(ArrayList<Repo> datas);
 
 }

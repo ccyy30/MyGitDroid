@@ -1,5 +1,6 @@
 package com.feicui.mygitdroid.network;
 
+import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.login.model.AccessTokenResult;
 import com.feicui.mygitdroid.login.model.User;
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
+import retrofit2.http.Query;
 
 /**
  * Created by Administrator on 2016/7/28 0028.
@@ -68,5 +70,10 @@ public class GitHubClient implements GitHubApi{
     @Override
     public Call<User> getUserInfo() {
         return gitHubApi.getUserInfo();
+    }
+
+    @Override
+    public Call<RepoResult> searchRepos(@Query("q") String query, @Query("page") int pageId) {
+        return gitHubApi.searchRepos(query,pageId);
     }
 }

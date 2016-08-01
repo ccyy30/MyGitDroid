@@ -3,10 +3,17 @@ package com.feicui.mygitdroid.hotrepo.repolist;
 import android.os.AsyncTask;
 
 import com.feicui.mygitdroid.commons.LogUtils;
+import com.feicui.mygitdroid.hotrepo.Language;
+import com.feicui.mygitdroid.hotrepo.repolist.modle.RepoResult;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListPtrView;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListView;
+import com.feicui.mygitdroid.network.GitHubClient;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2016/7/28 0028.
@@ -14,86 +21,83 @@ import java.util.ArrayList;
 public class RepoListPresenter {
 
     private RepoListView repoListView;
-    private int count;
+    private Call<RepoResult> repoResultCall;
+    private int pageId;
+    private Language language;
 
-    public RepoListPresenter(RepoListView repoListView){
+    public RepoListPresenter(RepoListView repoListView,Language language){
         this.repoListView = repoListView;
+        this.language = language;
     }
 
     //下拉刷新业务
     public void ptrRefresh() {
-        new PtrRefreshTask().execute();
+        //下拉刷新先隐藏上拉的视图
+        repoListView.hideLoadMore();
+        pageId = 1;//下拉刷新默认要最新的数据，所以页id为1表示最新
+        if(repoResultCall != null)repoResultCall.cancel();
+        repoResultCall = GitHubClient.getInstance().searchRepos("language:" + language.getPath(),pageId);
+        repoResultCall.enqueue(repoResultCallback);
     }
+
+    private Callback<RepoResult> repoResultCallback = new Callback<RepoResult>() {
+        @Override
+        public void onResponse(Call<RepoResult> call, Response<RepoResult> response) {
+            repoListView.stopRefresh();
+            if(response.isSuccessful()){
+                RepoResult result = response.body();
+                if(result.getTotalCount() <= 0){//说明没有找到结果
+                    repoListView.showEmptyView();
+                    repoListView.showMessage("没有查找到结果");
+                    return;
+                }
+                repoListView.showContentView();
+                LogUtils.i(result.getRepoList().toString());
+                repoListView.addRefreshData(result.getRepoList());
+                //下拉后让pageId为2
+                pageId = 2;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<RepoResult> call, Throwable t) {
+            //停止刷新
+            repoListView.stopRefresh();
+            repoListView.showMessage(t.getMessage());
+            repoListView.showErrorView();
+        }
+    };
 
     //上拉加载更多业务
     public void loadMore(){
-        new LoadMoreTask().execute();
+        repoListView.stopRefresh();
+        //加载进度条
+        repoListView.showLoadMoreLoading();
+        if(repoResultCall != null)repoResultCall.cancel();
+        //注意这里不加"language:" + 的话搜索出来的没有顺序，还会有警告
+        repoResultCall = GitHubClient.getInstance().searchRepos("language:" + language.getPath(),pageId);
+        repoResultCall.enqueue(loadMoreCallback);
     }
 
-    private class PtrRefreshTask extends AsyncTask<Void,Void,Void>{
-
+    private Callback<RepoResult> loadMoreCallback = new Callback<RepoResult>() {
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            ArrayList<String> datas = new ArrayList<String>();
-            for(int x = 0 ; x < 20; x++){
-                datas.add("测试数据" + (count++));
-            }
-            //停止刷新
-            repoListView.stopRefresh();
-            //更新数据
-            repoListView.addRefreshData(datas);
-            //显示内容视图
-            repoListView.showContentView();
-        }
-    }
-
-    private class LoadMoreTask extends AsyncTask<Void,Void,Void>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            LogUtils.i("444444");
-            //加载进度条
-            repoListView.showLoadMoreLoading();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            ArrayList<String> datas = new ArrayList<String>();
-            for(int x = 0 ; x < 20; x++){
-                datas.add("测试数据" + (count++));
-            }
-            //隐藏进度条
+        public void onResponse(Call<RepoResult> call, Response<RepoResult> response) {
             repoListView.hideLoadMore();
-            //添加数据
-            repoListView.addLoadMoreData(datas);
+            if(response.isSuccessful()){
+                RepoResult result = response.body();
+                LogUtils.i(result.getRepoList().toString());
+                repoListView.addRefreshData(result.getRepoList());
+                //每次上拉加载让pageId++，id越大页码越大
+                pageId++;
+            }
         }
-    }
+
+        @Override
+        public void onFailure(Call<RepoResult> call, Throwable t) {
+            //停止刷新
+            repoListView.hideLoadMore();
+            repoListView.showMessage(t.getMessage());
+            repoListView.showLoadMoreErro(t.getMessage());
+        }
+    };
 }
