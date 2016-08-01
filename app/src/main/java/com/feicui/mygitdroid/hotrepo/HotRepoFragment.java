@@ -38,7 +38,7 @@ public class HotRepoFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
         //getChildFragmentManager(),在Fragment中获取管理器
-        adapter = new HotRepoAdapter(getChildFragmentManager());
+        adapter = new HotRepoAdapter(getChildFragmentManager(),getContext());
         viewPager.setAdapter(adapter);
         //viewpager上方的标题栏，需要指定绑定的viewpager对象
         tabLayout.setupWithViewPager(viewPager);

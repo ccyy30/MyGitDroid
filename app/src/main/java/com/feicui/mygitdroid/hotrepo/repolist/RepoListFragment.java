@@ -14,6 +14,7 @@ import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.commons.LogUtils;
 import com.feicui.mygitdroid.components.FooterView;
+import com.feicui.mygitdroid.hotrepo.Language;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListPtrView;
 import com.feicui.mygitdroid.hotrepo.repolist.view.RepoListView;
 import com.mugen.Mugen;
@@ -210,4 +211,13 @@ public class RepoListFragment extends Fragment implements RepoListView {
         adapter.notifyDataSetChanged();
     }
 
+    private static final String KEY_LANGUAGE = "key_language";
+
+    public static RepoListFragment getInstance(Language language) {
+        RepoListFragment fragment = new RepoListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_LANGUAGE,language);
+        fragment.setArguments(args);
+        return fragment;
+    }
 }

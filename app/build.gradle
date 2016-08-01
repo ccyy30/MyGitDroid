@@ -48,4 +48,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     //图片处理库
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //用于处理IO流的常用指令，比如将json的流转换成字符串
+    compile 'commons-io:commons-io:2.4'
 }
