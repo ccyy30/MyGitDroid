@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".github.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".splash.SplashActivity"
@@ -24,9 +24,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".github.login.LoginActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".repoinfo.RepoInfoActivity"></activity>
+        <activity android:name=".github.repoinfo.RepoInfoActivity"></activity>
     </application>
 
 </manifest>
