@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
+import com.feicui.mygitdroid.favorite.FavoriteFragment;
 import com.feicui.mygitdroid.github.hotrepo.HotRepoFragment;
 import com.feicui.mygitdroid.github.hotuser.HotUserFragment;
 import com.feicui.mygitdroid.github.login.LoginActivity;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityUtils activityUtils;
     private HotRepoFragment hotRepoFragment;
     private HotUserFragment hotUserFragment;
+    private FavoriteFragment favoriteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,13 @@ public class MainActivity extends AppCompatActivity {
                     if (hotUserFragment == null) hotUserFragment = new HotUserFragment();
                     if (!hotUserFragment.isAdded()) {
                         changeFragment(hotUserFragment);
+                    }
+                    break;
+                //我的收藏
+                case R.id.arsenal_my_repo:
+                    if (favoriteFragment == null) favoriteFragment = new FavoriteFragment();
+                    if (!favoriteFragment.isAdded()) {
+                        changeFragment(favoriteFragment);
                     }
                     break;
             }

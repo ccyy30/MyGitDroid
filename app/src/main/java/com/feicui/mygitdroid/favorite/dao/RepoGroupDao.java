@@ -13,17 +13,26 @@ import java.util.List;
  */
 public class RepoGroupDao {
 
-    private DBHelper dbHelper;
+//    private DBHelper dbHelper;
     private Dao<RepoGroup,Long> dao;
 
-    public RepoGroupDao(Context context){
-        if(dbHelper == null){
-            dbHelper = new DBHelper(context);
-            try {
-                dao = dbHelper.getDao(RepoGroup.class);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+//    public RepoGroupDao(Context context){
+//        if(dbHelper == null){
+//            dbHelper = new DBHelper(context);
+//            try {
+//                dao = dbHelper.getDao(RepoGroup.class);
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+
+    public RepoGroupDao(DBHelper dbHelp) {
+        try {
+            // 创建出仓库类别表的Dao
+            dao = dbHelp.getDao(RepoGroup.class);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

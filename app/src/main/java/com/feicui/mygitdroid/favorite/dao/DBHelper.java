@@ -19,7 +19,16 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private Context context;
 
-    public DBHelper(Context context) {
+    private static DBHelper dbHelp;
+
+    public static synchronized DBHelper getInstance(Context context) {
+        if (dbHelp == null) {
+            dbHelp = new DBHelper(context.getApplicationContext());
+        }
+        return dbHelp;
+    }
+
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
@@ -30,7 +39,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
             //创建表
             TableUtils.createTableIfNotExists(connectionSource,RepoGroup.class);
             //初始化数据
-            new RepoGroupDao(context).createOrUpdate(RepoGroup.getRepoGroupList(context));
+            new RepoGroupDao(this).createOrUpdate(RepoGroup.getRepoGroupList(context));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
