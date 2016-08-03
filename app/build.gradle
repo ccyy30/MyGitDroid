@@ -50,4 +50,6 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     //用于处理IO流的常用指令，比如将json的流转换成字符串
     compile 'commons-io:commons-io:2.4'
+    compile 'com.j256.ormlite:ormlite-core:5.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
 }
