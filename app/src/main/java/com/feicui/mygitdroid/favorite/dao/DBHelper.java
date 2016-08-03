@@ -3,6 +3,7 @@ package com.feicui.mygitdroid.favorite.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.feicui.mygitdroid.favorite.model.LocalRepo;
 import com.feicui.mygitdroid.favorite.model.RepoGroup;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
@@ -36,10 +37,13 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            //创建表
+            //创建仓库类别表
             TableUtils.createTableIfNotExists(connectionSource,RepoGroup.class);
+            //创建本地仓库表
+            TableUtils.createTableIfNotExists(connectionSource,LocalRepo.class);
             //初始化数据
             new RepoGroupDao(this).createOrUpdate(RepoGroup.getRepoGroupList(context));
+            new LocalRepoDao(this).createOrUpdate(LocalRepo.getLocalRepoList(context));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -50,6 +54,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         try {
             //删除表
             TableUtils.dropTable(connectionSource,RepoGroup.class,true);
+            TableUtils.dropTable(connectionSource,LocalRepo.class,true);
             //再创建
             onCreate(database,connectionSource);
         } catch (SQLException e) {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
+import android.text.GetChars;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.feicui.mygitdroid.R;
+import com.feicui.mygitdroid.commons.ActivityUtils;
+import com.feicui.mygitdroid.commons.LogUtils;
 import com.feicui.mygitdroid.favorite.dao.DBHelper;
+import com.feicui.mygitdroid.favorite.dao.LocalRepoDao;
 import com.feicui.mygitdroid.favorite.dao.RepoGroupDao;
 import com.feicui.mygitdroid.favorite.model.RepoGroup;
 
@@ -42,7 +46,10 @@ public class FavoriteFragment extends Fragment{
     @BindView(R.id.listView)
     ListView listView;
 
-    private RepoGroupDao dao;
+    private RepoGroupDao repoGroupDao;
+    private LocalRepoDao localRepoDao;
+    private ActivityUtils activityUtils;
+    private FavoriteAdapter favoriteAdapter;
 
     @Nullable
     @Override
@@ -53,9 +60,12 @@ public class FavoriteFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        activityUtils = new ActivityUtils(this);
         ButterKnife.bind(this,view);
-        dao = new RepoGroupDao(DBHelper.getInstance(getContext()));
-
+        repoGroupDao = new RepoGroupDao(DBHelper.getInstance(getContext()));
+        localRepoDao = new LocalRepoDao(DBHelper.getInstance(getContext()));
+        favoriteAdapter = new FavoriteAdapter(getContext());
+        listView.setAdapter(favoriteAdapter);
     }
 
     //点击右上角按钮
@@ -68,7 +78,7 @@ public class FavoriteFragment extends Fragment{
         //菜单中继续添加其他的分类
         Menu menu = popupMenu.getMenu();
         //先从数据库获取数据
-        List<RepoGroup> datas = dao.queryForAll();
+        List<RepoGroup> datas = repoGroupDao.queryForAll();
         //添加菜单条目，参数1组id   2条目id   3排序id   4标题
         for(RepoGroup repoGroup:datas){
             menu.add(Menu.NONE,(int)repoGroup.getId(),Menu.NONE,repoGroup.getName());
@@ -82,12 +92,27 @@ public class FavoriteFragment extends Fragment{
                 String title = item.getTitle().toString();
                 //点击后切换左上角仓库类别
                 tvGroupType.setText(title);
-                //TODO 更新listview中的数据
-
+                LogUtils.i(item.getItemId()+"");
+                //更新listview中的数据
+                setData(item.getItemId());
                 return true;
             }
         });
         popupMenu.show();
+    }
+    //更新listview中的数据
+    private void setData(int itemId) {
+        switch (itemId){
+            case R.id.repo_group_all:
+                favoriteAdapter.addAll(localRepoDao.queryForAll());
+                break;
+            case R.id.repo_group_no:
+                favoriteAdapter.addAll(localRepoDao.queryForNoGroup());
+                break;
+            default:
+                favoriteAdapter.addAll(localRepoDao.queryForGroupId(itemId));
+                break;
+        }
     }
 
 }
