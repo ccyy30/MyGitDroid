@@ -16,6 +16,7 @@ public class RepoGroupDao {
 //    private DBHelper dbHelper;
     private Dao<RepoGroup,Long> dao;
 
+    //错误的写法
 //    public RepoGroupDao(Context context){
 //        if(dbHelper == null){
 //            dbHelper = new DBHelper(context);

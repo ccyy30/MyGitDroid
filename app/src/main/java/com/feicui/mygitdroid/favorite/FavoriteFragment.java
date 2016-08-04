@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.text.GetChars;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -66,6 +68,8 @@ public class FavoriteFragment extends Fragment{
         localRepoDao = new LocalRepoDao(DBHelper.getInstance(getContext()));
         favoriteAdapter = new FavoriteAdapter(getContext());
         listView.setAdapter(favoriteAdapter);
+        //注册上下文菜单，点击listview时弹出上下文菜单
+        registerForContextMenu(listView);
     }
 
     //点击右上角按钮
@@ -115,4 +119,41 @@ public class FavoriteFragment extends Fragment{
         }
     }
 
+    //创建上下文菜单
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        //判断如果是点击了listview弹出的上下文菜单的话,因为点击其他按钮也可能弹出上下文菜单，这里为了区分
+        if(v.getId() == R.id.listView){
+            //加载菜单的布局
+            getActivity().getMenuInflater().inflate(R.menu.menu_context_favorite,menu);
+            //获取菜单中的子菜单，因为子菜单在布局中只有未分类一个item，所以还需要将其他的类别添加到子菜单中
+            SubMenu subMenu = menu.findItem(R.id.sub_menu_move).getSubMenu();
+            //获取类别数据
+            List<RepoGroup> repoGroups = repoGroupDao.queryForAll();
+            //添加类别数据到子菜单
+            for(RepoGroup repoGroup:repoGroups){
+                subMenu.add(R.id.menu_group_move,(int)repoGroup.getId(),Menu.NONE,repoGroup.getName());
+            }
+        }
+
+    }
+
+    //当点击上下文菜单子选项时
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //获取itemId进行判断
+        //如果点击的是删除
+        int id = item.getItemId();
+        if(id == R.id.delete){
+            LogUtils.i("删除");
+            return true;
+        }
+        if(id == R.id.sub_menu_move){
+            LogUtils.i("移动至");
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 }

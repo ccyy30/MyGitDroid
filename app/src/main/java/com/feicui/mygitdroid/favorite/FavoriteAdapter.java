@@ -68,8 +68,8 @@ public class FavoriteAdapter extends BaseAdapter {
         //加载本地仓库头像
         ImageLoader.getInstance().displayImage(repo.getAvatar(),vh.ivIcon);
         vh.tvRepoInfo.setText(repo.getDescription());
-        vh.tvRepoName.setText(repo.getName());
-        vh.tvRepoStars.setText(String.format("start: %d  fork: %d", repo.getStarCount(), repo.getForkCount()));
+        vh.tvRepoName.setText(repo.getFullName());
+        vh.tvRepoStars.setText(String.format("star: %d  fork: %d", repo.getStarCount(), repo.getForkCount()));
         return view;
     }
 
