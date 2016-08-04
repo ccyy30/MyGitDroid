@@ -47,7 +47,7 @@ public class RepoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Repo getItem(int i) {
         return repos.get(i);
     }
 

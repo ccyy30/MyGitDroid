@@ -14,6 +14,10 @@ import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.commons.LogUtils;
 import com.feicui.mygitdroid.components.FooterView;
+import com.feicui.mygitdroid.favorite.dao.DBHelper;
+import com.feicui.mygitdroid.favorite.dao.LocalRepoDao;
+import com.feicui.mygitdroid.favorite.model.LocalRepo;
+import com.feicui.mygitdroid.favorite.model.LocalRepoConvert;
 import com.feicui.mygitdroid.github.hotrepo.Language;
 import com.feicui.mygitdroid.github.hotrepo.repolist.modle.Repo;
 import com.feicui.mygitdroid.github.hotrepo.repolist.view.RepoListView;
@@ -90,6 +94,20 @@ public class RepoListFragment extends Fragment implements RepoListView {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 RepoInfoActivity.open(getContext(), (Repo) repoListAdapter.getItem(i));
+            }
+        });
+        //设置条目长按，添加到收藏
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //获取当前长按的仓库对象
+                Repo repo = repoListAdapter.getItem(i);
+                //将Repo转换成LocalRepo（本地仓库）
+                LocalRepo localRepo = LocalRepoConvert.convertToLocalRepo(repo);
+                //添加到收藏，默认是未分类
+                new LocalRepoDao(DBHelper.getInstance(getContext())).createOrUpdate(localRepo);
+                activityUtils.showToast("收藏成功");
+                return true;
             }
         });
         listView.removeFooterView(footerView);

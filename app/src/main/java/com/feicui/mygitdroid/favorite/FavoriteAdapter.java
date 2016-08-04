@@ -48,7 +48,7 @@ public class FavoriteAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public LocalRepo getItem(int i) {
         return repos.get(i);
     }
 

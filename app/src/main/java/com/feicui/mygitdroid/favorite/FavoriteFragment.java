@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.feicui.mygitdroid.commons.LogUtils;
 import com.feicui.mygitdroid.favorite.dao.DBHelper;
 import com.feicui.mygitdroid.favorite.dao.LocalRepoDao;
 import com.feicui.mygitdroid.favorite.dao.RepoGroupDao;
+import com.feicui.mygitdroid.favorite.model.LocalRepo;
 import com.feicui.mygitdroid.favorite.model.RepoGroup;
 
 import java.util.List;
@@ -96,14 +98,20 @@ public class FavoriteFragment extends Fragment{
                 String title = item.getTitle().toString();
                 //点击后切换左上角仓库类别
                 tvGroupType.setText(title);
+                //保存当前选择的类别
+                curLocalRepoId = item.getItemId();
                 LogUtils.i(item.getItemId()+"");
                 //更新listview中的数据
-                setData(item.getItemId());
+                setData(curLocalRepoId);
                 return true;
             }
         });
         popupMenu.show();
     }
+
+    //保存popmenu点击item选中的仓库类别
+    private int curLocalRepoId;
+
     //更新listview中的数据
     private void setData(int itemId) {
         switch (itemId){
@@ -119,6 +127,9 @@ public class FavoriteFragment extends Fragment{
         }
     }
 
+    //当前选中的仓库
+    private LocalRepo curLocalRepo;
+
     //创建上下文菜单
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -129,10 +140,16 @@ public class FavoriteFragment extends Fragment{
             getActivity().getMenuInflater().inflate(R.menu.menu_context_favorite,menu);
             //获取菜单中的子菜单，因为子菜单在布局中只有未分类一个item，所以还需要将其他的类别添加到子菜单中
             SubMenu subMenu = menu.findItem(R.id.sub_menu_move).getSubMenu();
+            //获取当前点击的本地仓库索引
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            int position = info.position;
+            //根据长按的条目索引来获取本地仓库对象
+            curLocalRepo = favoriteAdapter.getItem(position);
             //获取类别数据
             List<RepoGroup> repoGroups = repoGroupDao.queryForAll();
             //添加类别数据到子菜单
             for(RepoGroup repoGroup:repoGroups){
+                //将仓库类别的id作为菜单项的id添加到菜单中
                 subMenu.add(R.id.menu_group_move,(int)repoGroup.getId(),Menu.NONE,repoGroup.getName());
             }
         }
@@ -148,12 +165,33 @@ public class FavoriteFragment extends Fragment{
         int id = item.getItemId();
         if(id == R.id.delete){
             LogUtils.i("删除");
+            // 删除的本地仓库对象
+            localRepoDao.deleteLocalRepo(curLocalRepo);
+            //根据选中的本地仓库类别来重置列表
+            setData(curLocalRepoId);
             return true;
         }
-        if(id == R.id.sub_menu_move){
+        //获取组id
+        int groupId = item.getGroupId();
+        if(groupId == R.id.menu_group_move){
             LogUtils.i("移动至");
+            //如果点击的是未分类
+            if(id == R.id.repo_group_no){
+                //将当前选择的本地仓库类别修改成未分类
+                curLocalRepo.setRepoGroup(null);
+            }else{//如果不是未分类
+                //查询出要修改的仓库类别
+                RepoGroup repoGroup = repoGroupDao.queryForId(id);
+                //将当前仓库类别修改为选中的类别
+                curLocalRepo.setRepoGroup(repoGroup);
+            }
+            //注意：一定要更新数据库的数据
+            localRepoDao.createOrUpdate(curLocalRepo);//更新数据库
+            //重置列表
+            setData(curLocalRepoId);
             return true;
         }
+
         return super.onContextItemSelected(item);
     }
 }

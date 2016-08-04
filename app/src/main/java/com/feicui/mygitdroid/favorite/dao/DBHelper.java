@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class DBHelper extends OrmLiteSqliteOpenHelper{
 
     private static final String DATABASE_NAME = "repo_favorite.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private Context context;
 
     private static DBHelper dbHelp;
