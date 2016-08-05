@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.favorite.FavoriteFragment;
+import com.feicui.mygitdroid.gank.GankFragment;
 import com.feicui.mygitdroid.github.hotrepo.HotRepoFragment;
 import com.feicui.mygitdroid.github.hotuser.HotUserFragment;
 import com.feicui.mygitdroid.github.login.LoginActivity;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private HotRepoFragment hotRepoFragment;
     private HotUserFragment hotUserFragment;
     private FavoriteFragment favoriteFragment;
+    private GankFragment gankFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,13 @@ public class MainActivity extends AppCompatActivity {
                     if (favoriteFragment == null) favoriteFragment = new FavoriteFragment();
                     if (!favoriteFragment.isAdded()) {
                         changeFragment(favoriteFragment);
+                    }
+                    break;
+                //每日干货
+                case R.id.tips_daily:
+                    if (gankFragment == null) gankFragment = new GankFragment();
+                    if (!gankFragment.isAdded()) {
+                        changeFragment(gankFragment);
                     }
                     break;
             }

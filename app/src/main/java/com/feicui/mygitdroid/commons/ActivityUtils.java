@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -111,5 +112,14 @@ public class ActivityUtils {
             InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void startBrowser(String url){
+        if (getActivity() == null) return;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(url);
+        intent.setData(uri);
+        getActivity().startActivity(intent);
     }
 }

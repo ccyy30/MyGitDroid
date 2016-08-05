@@ -157,7 +157,6 @@ public class FavoriteFragment extends Fragment{
     }
 
     //当点击上下文菜单子选项时
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         //获取itemId进行判断
