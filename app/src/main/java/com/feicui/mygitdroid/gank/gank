@@ -1,0 +1,72 @@
+用ListView展示出每天的 干货列表数据
+
+视图上:
+一个View用来显示日期
+一个View用来选择日期
+一个ListView用来展示当前日期列表数据
+class GankFragment extends Fragment implements GankPresenter.GankView{
+     完成视图工作
+     GankPresenter gankPresenter;
+
+     public void onClick() {
+            gankPresenter = new GankPresenter(this);
+            gankPresenter.getGanks();
+     }
+
+     public void setData() {
+
+     }
+}
+
+业务上:
+通过gank.io.api去获取解析出数据，交付给视图去展现
+class GankPresenter{
+    public interface GankView{
+         void setData();
+    }
+
+    private GankView gankView;
+    public GankPresenter(GankView gankView){
+         this.gankView = gankView;
+    }
+    void getGanks(){
+        ...
+        gankView.setData();
+    };
+}
+
+
+// Retrofit
+// HTTP API --> Java Interface
+
+消息
+请求  --  响应
+
+不管用什么代码，什么框架
+我们都是在构建请求
+构建请求离不开三个点
+状态行，请求头，请求体
+
+代码表现其实行直观了
+HttpGet (确定了状态行里的请求路径了)
+HttRequest (要构建其它信息)
+    .addHeader加各种头信息
+    .addEntitiy加请求体
+
+HttpResponse响应
+处理响应,也离不开三个点
+ 状态行，，响应头，响应体
+
+if(code == 200){}
+
+Volley , XUtils , OKHTTP, Retrofit
+
+如果有注解，那不是更简单和直观了
+Retrofit就能做到
+
+他能做到将HTTP API 接口  转为  JAVA 接口，
+提供HTTP消息的各种注解
+再Retrofit里，提供了create方法 ，他将根据你的注解自动构建出Call模型
+
+@GET("http://gank.io/api/day/2016/8/5")
+Call<> getGank();
