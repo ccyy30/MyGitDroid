@@ -10,8 +10,11 @@ import java.util.List;
  */
 public interface GankView {
 
-    void showMessage(String msg);
     void showEmptyView();
+
     void hideEmptyView();
+
+    void showMessage(String msg);
+
     void addData(List<GankItem> gankItems);
 }

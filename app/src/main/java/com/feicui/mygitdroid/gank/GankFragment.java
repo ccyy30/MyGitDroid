@@ -14,6 +14,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.feicui.mygitdroid.R;
 import com.feicui.mygitdroid.commons.ActivityUtils;
 import com.feicui.mygitdroid.gank.model.GankItem;
@@ -53,6 +55,7 @@ public class GankFragment extends Fragment implements GankView{
         activityUtils = new ActivityUtils(this);
         calendar=Calendar.getInstance(Locale.CHINA);
         date = new Date(System.currentTimeMillis());
+        gankPresenter = new GankPresenter(this);
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +80,6 @@ public class GankFragment extends Fragment implements GankView{
         });
 
         //获取每日干货业务类
-        gankPresenter = new GankPresenter(this);
         gankPresenter.getGanks(calendar);
     }
 
@@ -100,8 +102,9 @@ public class GankFragment extends Fragment implements GankView{
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             //根据时间重新获取干货数据
             calendar.set(year,month,day);
+            Date date = calendar.getTime();
             //更新左上角时间
-            tvDate.setText(simpleDateFormat.format(calendar.getTime()));
+            tvDate.setText(simpleDateFormat.format(date));
             gankPresenter.getGanks(calendar);
         }
     };
@@ -120,6 +123,7 @@ public class GankFragment extends Fragment implements GankView{
     public void showEmptyView() {
         emptyView.setVisibility(View.VISIBLE);
         content.setVisibility(View.GONE);
+        YoYo.with(Techniques.FadeIn).duration(500).playOn(emptyView);
     }
 
     @Override
